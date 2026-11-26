@@ -1,0 +1,1 @@
+# perbandingan_kekuatan_dan_kecepatan_kerja_20_soal_
