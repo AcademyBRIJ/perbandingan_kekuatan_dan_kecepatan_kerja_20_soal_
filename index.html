@@ -1,0 +1,1181 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UJIAN CBT SKD - BRIJ Academy</title>
+    <!-- Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class'
+        }
+    </script>
+    <!-- MathJax untuk merender rumus matematika LaTeX -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            },
+            svg: {
+                fontCache: 'global'
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <!-- Inisialisasi Tema Sebelum Render untuk Mencegah Kedipan Layar -->
+    <script>
+        (function() {
+            try {
+                const savedTheme = localStorage.getItem('brij_cbt_theme');
+                if (savedTheme === 'dark') {
+                    document.documentElement.classList.add('dark');
+                }
+            } catch (e) {
+                console.warn('Gagal membaca preferensi tema dari localStorage:', e);
+            }
+        })();
+    </script>
+    <!-- Google Fonts: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Custom Scrollbar untuk area soal (Mode Terang & Mode Gelap) */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+        html.dark ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        html.dark ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 4px;
+        }
+        html.dark ::-webkit-scrollbar-thumb:hover {
+            background: #475569;
+        }
+        /* Custom Radio Button ala UJIAN CBT SKD */
+        .option-circle {
+            transition: all 0.2s ease;
+        }
+    </style>
+</head>
+<body class="bg-slate-100 dark:bg-slate-950 text-slate-800 dark:text-slate-100 antialiased select-none transition-colors duration-200">
+
+    <!-- ========================================== -->
+    <!-- 1. HALAMAN LOGIN (TAMPILAN AWAL)           -->
+    <!-- ========================================== -->
+    <div id="login-screen" class="min-h-screen flex flex-col justify-between bg-gradient-to-b from-sky-500 to-sky-700 dark:from-slate-900 dark:to-slate-950 transition-colors duration-200">
+        <!-- Top Bar Login -->
+        <div class="w-full bg-sky-600/50 dark:bg-slate-900/90 backdrop-blur-sm text-white py-3.5 px-4 sm:px-6 shadow-sm border-b border-transparent dark:border-slate-800 flex items-center justify-between gap-2">
+            <div class="flex items-center gap-2.5 sm:gap-3">
+                <div class="bg-white text-sky-600 font-extrabold px-3 py-1 rounded-lg text-base sm:text-lg tracking-wider shadow">
+                    BRIJ
+                </div>
+                <span class="font-semibold text-base sm:text-lg tracking-wide">BRIJ Academy</span>
+            </div>
+            <div class="flex items-center gap-2 sm:gap-3">
+                <span class="hidden sm:inline-block text-xs md:text-sm bg-sky-800/60 dark:bg-slate-800 text-sky-50 dark:text-slate-300 px-3 py-1 rounded-full border border-transparent dark:border-slate-700">
+                    Aplikasi CBT Lokal v1.0
+                </span>
+                <!-- Tombol Pengalih Mode Gelap / Mode Terang -->
+                <button type="button" onclick="toggleTheme()" aria-label="Ubah Tema Tampilan"
+                    class="theme-toggle-btn flex items-center gap-1.5 bg-white/15 hover:bg-white/25 dark:bg-slate-800 dark:hover:bg-slate-700 text-white border border-white/25 dark:border-slate-700 px-3 py-1.5 rounded-full text-xs sm:text-sm font-semibold transition cursor-pointer shadow-xs">
+                </button>
+            </div>
+        </div>
+
+        <!-- Card Login -->
+        <div class="flex-grow flex items-center justify-center p-4">
+            <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl w-full max-w-md overflow-hidden border border-sky-100 dark:border-slate-800 transition-colors duration-200">
+                <div class="bg-sky-50 dark:bg-slate-800/80 border-b border-sky-100 dark:border-slate-800 p-6 text-center">
+                    <div class="w-16 h-16 bg-sky-500 text-white rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-md">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-9 w-9" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                        </svg>
+                    </div>
+                    <h1 class="text-2xl font-bold text-slate-800 dark:text-white">Selamat Datang</h1>
+                    <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Simulasi UJIAN CBT SKD</p>
+                </div>
+
+                <form id="login-form" class="p-6 space-y-4" novalidate>
+                    <!-- Input Nama Lengkap Peserta -->
+                    <div>
+                        <label for="participant-name" class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1.5">Nama Lengkap Peserta</label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400 dark:text-slate-500">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
+                                </svg>
+                            </div>
+                            <input type="text" id="participant-name" required placeholder="Masukkan nama Anda..." 
+                                class="w-full pl-10 pr-4 py-3 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 font-medium">
+                        </div>
+                        <p id="name-error" class="hidden mt-1.5 text-xs font-semibold text-rose-600 dark:text-rose-400 flex items-center gap-1.5">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 shrink-0" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+                            </svg>
+                            <span>Nama lengkap peserta wajib diisi!</span>
+                        </p>
+                    </div>
+
+                    <!-- Input Password Ujian -->
+                    <div>
+                        <label for="exam-password" class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1.5">Password Ujian</label>
+                        <div class="relative">
+                            <!-- Ikon Gembok -->
+                            <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400 dark:text-slate-500">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" />
+                                </svg>
+                            </div>
+                            <input type="password" id="exam-password" required placeholder="Masukkan password..." 
+                                class="w-full pl-10 pr-11 py-3 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 font-medium">
+                            <!-- Tombol Ikon Mata (Tampilkan / Sembunyikan Password) -->
+                            <button type="button" id="toggle-password-btn" onclick="togglePasswordVisibility()" aria-label="Tampilkan atau Sembunyikan Password"
+                                class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-slate-600 dark:text-slate-500 dark:hover:text-slate-300 transition cursor-pointer">
+                                <!-- Ikon Mata Terbuka -->
+                                <svg id="eye-open-icon" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                </svg>
+                                <!-- Ikon Mata Tertutup -->
+                                <svg id="eye-closed-icon" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
+                                </svg>
+                            </button>
+                        </div>
+                        <!-- Pesan Peringatan Password Salah -->
+                        <p id="password-error" class="hidden mt-1.5 text-xs font-semibold text-rose-600 dark:text-rose-400 flex items-center gap-1.5">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 shrink-0" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+                            </svg>
+                            <span>Password salah! Silakan masukkan password yang benar untuk memulai ujian.</span>
+                        </p>
+                    </div>
+
+                    <div class="bg-sky-50 dark:bg-sky-950/50 rounded-xl p-3.5 text-xs text-sky-800 dark:text-sky-200 space-y-1 border border-sky-100 dark:border-sky-800/60">
+                        <p class="font-semibold">Informasi Ujian:</p>
+                        <ul class="list-disc list-inside space-y-0.5 text-sky-700 dark:text-sky-300">
+                            <li>Jumlah Soal: <span id="info-total-soal" class="font-bold">20</span> Butir</li>
+                            <li>Waktu Pengerjaan: <span class="font-bold">25 Menit</span></li>
+                            <li>Pastikan menjawab seluruh soal sebelum waktu habis.</li>
+                        </ul>
+                    </div>
+
+                    <button type="submit" 
+                        class="w-full bg-sky-500 hover:bg-sky-600 active:bg-sky-700 text-white font-bold py-3.5 px-4 rounded-xl shadow-lg shadow-sky-500/30 transition duration-200 flex items-center justify-center gap-2 cursor-pointer">
+                        <span>MULAI UJIAN</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+                        </svg>
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <div class="text-center text-sky-100 dark:text-slate-400 text-xs py-4">
+            &copy; 2026 BRIJ Academy. Sistem Evaluasi Pendidikan.
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- 2. HALAMAN UJIAN (CBT INTERFACE)           -->
+    <!-- ========================================== -->
+    <div id="exam-screen" class="hidden min-h-screen flex flex-col bg-slate-100 dark:bg-slate-950 transition-colors duration-200">
+        
+        <!-- HEADER BIRU MUDA / DARK HEADER -->
+        <header class="bg-sky-500 dark:bg-slate-900 text-white shadow-md sticky top-0 z-30 border-b border-transparent dark:border-slate-800 transition-colors duration-200">
+            <div class="max-w-7xl mx-auto px-3 sm:px-4 py-3 flex flex-wrap items-center justify-between gap-2">
+                <!-- Brand BRIJ Academy -->
+                <div class="flex items-center gap-2.5">
+                    <div class="bg-white text-sky-600 font-black px-2.5 py-1 rounded text-base md:text-lg shadow-sm">
+                        BRIJ
+                    </div>
+                    <div>
+                        <h1 class="font-bold text-base md:text-lg leading-tight tracking-wide">BRIJ Academy</h1>
+                        <p class="text-[11px] text-sky-100 dark:text-slate-400 hidden sm:block">UJIAN CBT SKD</p>
+                    </div>
+                </div>
+
+                <!-- Info Peserta, Timer & Pengalih Mode Gelap/Terang -->
+                <div class="flex items-center gap-2 md:gap-3.5">
+                    <!-- Nama Peserta -->
+                    <div class="flex items-center gap-2 bg-sky-600/70 dark:bg-slate-800 px-2.5 sm:px-3 py-1.5 rounded-lg border border-sky-400/50 dark:border-slate-700">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-sky-200 dark:text-sky-400 hidden sm:block" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
+                        </svg>
+                        <span id="display-name" class="text-xs md:text-sm font-semibold truncate max-w-[90px] sm:max-w-[180px]">Peserta</span>
+                    </div>
+
+                    <!-- Sisa Waktu -->
+                    <div class="flex items-center gap-1.5 sm:gap-2 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 px-2.5 sm:px-3 py-1.5 rounded-lg shadow-sm border border-transparent dark:border-slate-700 font-mono">
+                        <span class="text-[11px] font-sans font-semibold text-slate-500 dark:text-slate-400 hidden md:inline">SISA WAKTU:</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-sky-600 dark:text-sky-400 animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <span id="timer-display" class="text-xs sm:text-sm md:text-base font-bold text-sky-700 dark:text-sky-400">25:00</span>
+                    </div>
+
+                    <!-- Tombol Pengalih Mode Gelap / Mode Terang -->
+                    <button type="button" onclick="toggleTheme()" aria-label="Ubah Tema Tampilan"
+                        class="theme-toggle-btn flex items-center gap-1.5 bg-white/15 hover:bg-white/25 dark:bg-slate-800 dark:hover:bg-slate-700 text-white border border-white/25 dark:border-slate-700 px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-semibold transition cursor-pointer shadow-xs">
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- SUB-HEADER INFO SOAL & UKURAN FONT -->
+        <div class="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-4 py-2.5 shadow-xs transition-colors duration-200">
+            <div class="max-w-7xl mx-auto flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <span class="text-xs md:text-sm font-semibold text-slate-500 dark:text-slate-400 uppercase">Soal Nomor</span>
+                    <span id="current-q-badge" class="bg-sky-500 text-white font-bold text-sm md:text-base px-3 py-0.5 rounded-md shadow-xs">1</span>
+                </div>
+                
+                <!-- Pengatur Ukuran Huruf ala UJIAN CBT SKD -->
+                <div class="flex items-center gap-1.5 text-xs text-slate-600 dark:text-slate-300">
+                    <span class="hidden sm:inline mr-1">Ukuran Font:</span>
+                    <button type="button" onclick="changeFontSize('text-sm')" class="px-2 py-1 border border-slate-300 dark:border-slate-700 rounded hover:bg-slate-100 dark:hover:bg-slate-800 font-medium cursor-pointer transition">A-</button>
+                    <button type="button" onclick="changeFontSize('text-base')" class="px-2 py-1 border border-slate-300 dark:border-slate-700 rounded hover:bg-slate-100 dark:hover:bg-slate-800 font-semibold cursor-pointer transition">A</button>
+                    <button type="button" onclick="changeFontSize('text-lg')" class="px-2 py-1 border border-slate-300 dark:border-slate-700 rounded hover:bg-slate-100 dark:hover:bg-slate-800 font-bold cursor-pointer transition">A+</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- KONTEN UTAMA (LAYOUT RESPONSIF: KIRI SOAL, KANAN NAVIGASI STATIS DI DESKTOP / BAWAH DI PONSEL) -->
+        <main class="flex-grow max-w-7xl w-full mx-auto p-3 md:p-6 flex flex-col lg:flex-row gap-5 items-start">
+            
+            <!-- AREA KIRI: LEMBAR SOAL & TOMBOL NAVIGASI BAWAH -->
+            <div class="w-full lg:flex-1 bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 flex flex-col justify-between min-h-[450px] transition-colors duration-200">
+                
+                <!-- Isi Pertanyaan & Pilihan Ganda -->
+                <div id="question-container" class="p-5 md:p-8 text-base leading-relaxed">
+                    <!-- Teks Soal -->
+                    <div id="question-text" class="text-slate-800 dark:text-slate-100 font-medium mb-6 whitespace-pre-line">
+                        Memuat soal...
+                    </div>
+
+                    <!-- Pilihan Ganda -->
+                    <div id="options-list" class="space-y-3">
+                        <!-- Opsi A, B, C, D, E akan di-render lewat JS -->
+                    </div>
+                </div>
+
+                <!-- TOMBOL NAVIGASI BAWAH (Sebelumnya, Ragu-ragu, Berikutnya) -->
+                <div class="bg-slate-50 dark:bg-slate-800/60 border-t border-slate-200 dark:border-slate-800 p-4 rounded-b-xl flex flex-wrap items-center justify-between gap-3">
+                    <!-- Tombol Soal Sebelumnya -->
+                    <button type="button" id="btn-prev" onclick="prevQuestion()" 
+                        class="flex-1 sm:flex-none flex items-center justify-center gap-1.5 bg-slate-600 hover:bg-slate-700 disabled:bg-slate-300 dark:disabled:bg-slate-700 dark:disabled:text-slate-500 disabled:cursor-not-allowed text-white font-semibold py-2.5 px-4 rounded-lg text-xs md:text-sm transition shadow-xs cursor-pointer">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
+                        </svg>
+                        <span>Soal Sebelumnya</span>
+                    </button>
+
+                    <!-- Tombol Ragu-ragu (Kuning) -->
+                    <button type="button" id="btn-doubt" onclick="toggleDoubt()" 
+                        class="flex-1 sm:flex-none flex items-center justify-center gap-2 bg-amber-400 hover:bg-amber-500 text-slate-900 font-bold py-2.5 px-5 rounded-lg text-xs md:text-sm transition shadow-xs border border-amber-500/30 cursor-pointer">
+                        <input type="checkbox" id="doubt-checkbox" class="w-4 h-4 accent-amber-700 pointer-events-none rounded">
+                        <span>Ragu-ragu</span>
+                    </button>
+
+                    <!-- Tombol Soal Berikutnya / Selesai -->
+                    <button type="button" id="btn-next" onclick="nextQuestion()" 
+                        class="w-full sm:w-auto flex items-center justify-center gap-1.5 bg-sky-500 hover:bg-sky-600 text-white font-semibold py-2.5 px-5 rounded-lg text-xs md:text-sm transition shadow-xs cursor-pointer">
+                        <span id="btn-next-text">Soal Berikutnya</span>
+                        <svg id="btn-next-icon" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- AREA KANAN (DESKTOP) / BAWAH (PONSEL): DAFTAR KOTAK NOMOR SOAL STATIS -->
+            <aside class="w-full lg:w-80 lg:sticky lg:top-20 shrink-0 bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 p-4 md:p-5 transition-colors duration-200">
+                <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3 mb-4">
+                    <h2 class="font-bold text-slate-700 dark:text-slate-200 text-sm uppercase tracking-wider">Daftar Soal</h2>
+                    <span id="answered-counter" class="text-xs font-semibold bg-sky-50 dark:bg-sky-950/70 text-sky-700 dark:text-sky-300 border border-transparent dark:border-sky-800/50 px-2.5 py-1 rounded-full">0 / 20 Dijawab</span>
+                </div>
+
+                <!-- Grid Kotak Nomor Soal -->
+                <div id="question-grid" class="grid grid-cols-5 gap-2.5 max-h-[320px] overflow-y-auto pr-1">
+                    <!-- Kotak nomor di-render lewat JS -->
+                </div>
+
+                <!-- Legenda Warna -->
+                <div class="mt-5 pt-4 border-t border-slate-100 dark:border-slate-800 grid grid-cols-2 gap-2 text-xs text-slate-600 dark:text-slate-300">
+                    <div class="flex items-center gap-2">
+                        <span class="w-4 h-4 rounded bg-emerald-500 inline-block shrink-0"></span>
+                        <span>Sudah Dijawab</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="w-4 h-4 rounded bg-amber-400 inline-block shrink-0"></span>
+                        <span>Ragu-ragu</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="w-4 h-4 rounded bg-white dark:bg-slate-800 border-2 border-sky-500 inline-block shrink-0"></span>
+                        <span>Sedang Dibuka</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="w-4 h-4 rounded bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-600 inline-block shrink-0"></span>
+                        <span>Belum Dijawab</span>
+                    </div>
+                </div>
+
+                <!-- Tombol Selesai Ujian -->
+                <button type="button" onclick="confirmFinish()" 
+                    class="mt-5 w-full bg-rose-500 hover:bg-rose-600 text-white font-bold py-2.5 px-4 rounded-lg text-sm transition shadow-sm flex items-center justify-center gap-2 cursor-pointer">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                    </svg>
+                    <span>Selesai Ujian</span>
+                </button>
+            </aside>
+
+        </main>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- 3. MODAL KONFIRMASI SELESAI                -->
+    <!-- ========================================== -->
+    <div id="confirm-modal" class="hidden fixed inset-0 bg-slate-900/60 dark:bg-slate-950/75 backdrop-blur-xs z-50 flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-900 rounded-2xl max-w-md w-full p-6 shadow-2xl border border-transparent dark:border-slate-800 transform transition-all">
+            <div class="w-12 h-12 rounded-full bg-amber-100 dark:bg-amber-950/70 text-amber-600 dark:text-amber-400 flex items-center justify-center mb-4">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+            </div>
+            <h3 class="text-lg font-bold text-slate-800 dark:text-white">Konfirmasi Selesai Ujian</h3>
+            <p id="confirm-message" class="text-sm text-slate-600 dark:text-slate-300 mt-2 leading-relaxed">
+                Apakah Anda yakin ingin mengakhiri ujian ini? Jawaban yang sudah dikirim tidak dapat diubah kembali.
+            </p>
+            <div class="mt-6 flex items-center justify-end gap-3">
+                <button type="button" onclick="closeConfirmModal()" class="px-4 py-2 rounded-lg border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-200 font-semibold text-sm hover:bg-slate-50 dark:hover:bg-slate-800 cursor-pointer transition">
+                    Batal
+                </button>
+                <button type="button" onclick="finishExam()" class="px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-sm shadow-sm cursor-pointer transition">
+                    Ya, Selesai
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- 4. HALAMAN HASIL / SKOR AKHIR & PEMBAHASAN -->
+    <!-- ========================================== -->
+    <div id="result-screen" class="hidden min-h-screen bg-slate-100 dark:bg-slate-950 flex flex-col justify-between p-4 transition-colors duration-200 select-text">
+        <!-- Baris Atas Pojok Kanan: Tombol Mode Gelap / Mode Terang -->
+        <div class="w-full max-w-4xl mx-auto flex justify-end pt-1">
+            <button type="button" onclick="toggleTheme()" aria-label="Ubah Tema Tampilan"
+                class="theme-toggle-btn flex items-center gap-1.5 bg-white hover:bg-slate-50 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-white border border-slate-200 dark:border-slate-700 px-3.5 py-2 rounded-full text-xs sm:text-sm font-semibold transition cursor-pointer shadow-xs">
+            </button>
+        </div>
+
+        <!-- Kontainer Hasil & Pembahasan -->
+        <div class="flex-grow max-w-4xl w-full mx-auto my-4 space-y-6">
+            <!-- Kartu Hasil Ujian -->
+            <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-xl max-w-lg mx-auto w-full overflow-hidden border border-slate-200 dark:border-slate-800 transition-colors duration-200">
+                <div class="bg-sky-500 dark:bg-slate-800 p-6 text-center text-white border-b border-transparent dark:border-slate-700">
+                    <span class="bg-white/20 dark:bg-sky-500/20 dark:text-sky-300 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">BRIJ Academy</span>
+                    <h2 class="text-2xl font-bold mt-2">Ujian Telah Selesai!</h2>
+                    <p class="text-sky-100 dark:text-slate-300 text-sm mt-1">Terima kasih telah mengikuti simulasi UJIAN CBT SKD.</p>
+                </div>
+                
+                <div class="p-6 md:p-8 text-center">
+                    <!-- Notifikasi jika waktu ujian habis otomatis -->
+                    <div id="time-up-banner" class="hidden mb-4 bg-amber-50 dark:bg-amber-950/60 border border-amber-200 dark:border-amber-800 text-amber-800 dark:text-amber-300 text-xs font-semibold px-4 py-2.5 rounded-xl">
+                        Waktu pengerjaan telah habis! Jawaban Anda telah otomatis disimpan.
+                    </div>
+
+                    <p class="text-sm text-slate-500 dark:text-slate-400">Nama Peserta</p>
+                    <p id="result-name" class="text-xl font-bold text-slate-800 dark:text-white mb-6">-</p>
+
+                    <div class="bg-sky-50 dark:bg-sky-950/50 border border-sky-100 dark:border-sky-800/60 rounded-2xl p-6 mb-6">
+                        <p class="text-xs font-bold uppercase tracking-wider text-sky-600 dark:text-sky-400 mb-1">Nilai Akhir Anda</p>
+                        <div id="result-score" class="text-5xl font-black text-sky-600 dark:text-sky-400">0</div>
+                    </div>
+
+                    <div class="grid grid-cols-3 gap-3 text-center mb-6">
+                        <div class="bg-emerald-50 dark:bg-emerald-950/50 p-3 rounded-xl border border-emerald-100 dark:border-emerald-800/60">
+                            <p class="text-xs text-emerald-600 dark:text-emerald-400 font-semibold">Benar</p>
+                            <p id="result-correct" class="text-lg font-bold text-emerald-700 dark:text-emerald-300">0</p>
+                        </div>
+                        <div class="bg-rose-50 dark:bg-rose-950/50 p-3 rounded-xl border border-rose-100 dark:border-rose-800/60">
+                            <p class="text-xs text-rose-600 dark:text-rose-400 font-semibold">Salah</p>
+                            <p id="result-wrong" class="text-lg font-bold text-rose-700 dark:text-rose-300">0</p>
+                        </div>
+                        <div class="bg-slate-50 dark:bg-slate-800/80 p-3 rounded-xl border border-slate-200 dark:border-slate-700">
+                            <p class="text-xs text-slate-500 dark:text-slate-400 font-semibold">Kosong</p>
+                            <p id="result-empty" class="text-lg font-bold text-slate-700 dark:text-slate-200">0</p>
+                        </div>
+                    </div>
+
+                    <div class="space-y-2.5">
+                        <a href="#pembahasan-section" class="block w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-4 rounded-xl transition shadow-md cursor-pointer">
+                            Lihat Pembahasan Soal
+                        </a>
+                        <button type="button" onclick="location.reload()" class="w-full bg-sky-500 hover:bg-sky-600 text-white font-bold py-3 px-4 rounded-xl transition shadow-md cursor-pointer">
+                            Ulangi Ujian
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Kartu Pembahasan Soal -->
+            <div id="pembahasan-section" class="bg-white dark:bg-slate-900 rounded-2xl shadow-xl overflow-hidden border border-slate-200 dark:border-slate-800 transition-colors duration-200">
+                <div class="bg-sky-500 dark:bg-slate-800 px-6 py-4 text-white border-b border-transparent dark:border-slate-700 flex flex-wrap items-center justify-between gap-3">
+                    <div>
+                        <h3 class="text-lg font-bold">Pembahasan Soal</h3>
+                        <p class="text-sky-100 dark:text-slate-300 text-xs mt-0.5">Kunci jawaban dan langkah penyelesaian seluruh soal</p>
+                    </div>
+                    <div class="flex items-center gap-1.5 text-xs">
+                        <button type="button" id="filter-all" onclick="filterReview('all')" class="px-3 py-1.5 rounded-lg bg-white text-sky-700 font-bold cursor-pointer transition shadow-xs">Semua (20)</button>
+                        <button type="button" id="filter-wrong" onclick="filterReview('wrong')" class="px-3 py-1.5 rounded-lg bg-sky-600/80 hover:bg-sky-700 dark:bg-slate-700 dark:hover:bg-slate-600 text-white font-semibold cursor-pointer transition">Salah / Kosong</button>
+                    </div>
+                </div>
+
+                <div id="review-list" class="p-5 md:p-6 space-y-6 divide-y divide-slate-200 dark:divide-slate-800">
+                    <!-- Pembahasan soal di-render lewat JS -->
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center text-slate-400 dark:text-slate-500 text-xs py-2">
+            &copy; 2026 BRIJ Academy. Sistem Evaluasi Pendidikan.
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- JAVASCRIPT LOGIC                           -->
+    <!-- ========================================== -->
+    <script>
+        // ==========================================
+        // PENGATURAN MODE GELAP & MODE TERANG
+        // ==========================================
+        function updateThemeButtons() {
+            const isDark = document.documentElement.classList.contains('dark');
+            const buttons = document.querySelectorAll('.theme-toggle-btn');
+
+            const sunIcon = `
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-amber-300 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                </svg>
+                <span>Mode Terang</span>
+            `;
+
+            const moonIcon = `
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                </svg>
+                <span>Mode Gelap</span>
+            `;
+
+            buttons.forEach(btn => {
+                btn.innerHTML = isDark ? sunIcon : moonIcon;
+            });
+        }
+
+        function toggleTheme() {
+            const htmlEl = document.documentElement;
+            const willBeDark = !htmlEl.classList.contains('dark');
+            htmlEl.classList.toggle('dark', willBeDark);
+
+            try {
+                localStorage.setItem('brij_cbt_theme', willBeDark ? 'dark' : 'light');
+            } catch (e) {
+                console.warn('Gagal menyimpan preferensi tema:', e);
+            }
+
+            updateThemeButtons();
+        }
+
+        // Sinkronkan label & ikon tombol tema saat halaman dimuat
+        updateThemeButtons();
+
+        // ==========================================
+        // TOGGLE LIHAT / SEMBUNYIKAN PASSWORD
+        // ==========================================
+        function togglePasswordVisibility() {
+            const passwordInput = document.getElementById('exam-password');
+            const eyeOpen = document.getElementById('eye-open-icon');
+            const eyeClosed = document.getElementById('eye-closed-icon');
+
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                eyeOpen.classList.add('hidden');
+                eyeClosed.classList.remove('hidden');
+            } else {
+                passwordInput.type = 'password';
+                eyeOpen.classList.remove('hidden');
+                eyeClosed.classList.add('hidden');
+            }
+        }
+
+        // BANK SOAL (20 Butir Soal TIU SKD CPNS: Perbandingan Kekuatan dan Kecepatan Kerja)
+        const questions = [
+            {
+                        "id": 1,
+                        "text": "Ibu Rina dan 2 orang asistennya menjalankan usaha kue bolu untuk pesanan hari raya. Bersama-sama mereka dapat memproduksi $450$ kotak kue bolu dalam waktu $180$ menit. Karena pesanan melonjak, Ibu Rina harus memproduksi $750$ kotak kue bolu dalam waktu yang sama. Jika kemampuan setiap orang sama, berapa jumlah pekerja tambahan yang harus dipekerjakan Ibu Rina?",
+                        "options": [
+                                    "$5$ orang",
+                                    "$4$ orang",
+                                    "$3$ orang",
+                                    "$2$ orang",
+                                    "$1$ orang"
+                        ],
+                        "correct": 3,
+                        "explanation": "• Jumlah pekerja awal = Ibu Rina + $2$ asisten = $3$ orang.\n• Karena waktu pengerjaan sama ($180$ menit), gunakan perbandingan senilai antara jumlah pekerja dan hasil produksi:\n$$\\frac{3\\text{ orang}}{O_2} = \\frac{450\\text{ kotak}}{750\\text{ kotak}}$$\n$$O_2 = \\frac{3 \\times 750}{450} = \\frac{2.250}{450} = 5\\text{ orang}$$\n• Pekerja tambahan = $5 - 3 = 2$ orang."
+            },
+            {
+                        "id": 2,
+                        "text": "Pak Budi dan 3 orang karyawannya menjalankan usaha percetakan undangan dengan kemampuan yang sama. Bersama-sama mereka dapat menyelesaikan $320$ undangan dalam waktu $120$ menit. Suatu hari, ada pesanan mendesak sebanyak $560$ undangan yang harus dikerjakan oleh Pak Budi bersama 3 orang karyawannya (tim yang sama). Berapa waktu yang dibutuhkan untuk menyelesaikan pesanan tersebut?",
+                        "options": [
+                                    "$2,5$ jam",
+                                    "$3$ jam",
+                                    "$3,5$ jam",
+                                    "$4$ jam",
+                                    "$4,5$ jam"
+                        ],
+                        "correct": 2,
+                        "explanation": "• Jumlah tim tetap sama ($4$ orang), sehingga waktu pengerjaan berbanding lurus (senilai) dengan jumlah undangan:\n$$\\frac{320\\text{ undangan}}{560\\text{ undangan}} = \\frac{120\\text{ menit}}{t}$$\n$$t = \\frac{560 \\times 120}{320} = \\frac{7 \\times 120}{4} = 210\\text{ menit}$$\n• Konversi ke satuan jam:\n$$\\frac{210}{60} = 3,5\\text{ jam}$$"
+            },
+            {
+                        "id": 3,
+                        "text": "Bu Tuti seorang pengrajin batik yang dapat membuat $150$ buah masker kain dalam waktu $5$ jam kerja sendiri. Menjelang acara pameran daerah, permintaan meningkat drastis sehingga ia harus memproduksi $480$ buah masker kain dalam waktu $4$ jam. Untuk memenuhi target produksi, ia membutuhkan asisten dengan kemampuan yang sama. Berapa jumlah asisten yang harus dipekerjakan Bu Tuti?",
+                        "options": [
+                                    "$2$ orang asisten",
+                                    "$3$ orang asisten",
+                                    "$4$ orang asisten",
+                                    "$5$ orang asisten",
+                                    "$6$ orang asisten"
+                        ],
+                        "correct": 1,
+                        "explanation": "• Gunakan rumus perbandingan beban kerja $\\frac{O_1 \\times W_1}{H_1} = \\frac{O_2 \\times W_2}{H_2}$ (dengan $O$ = Orang, $W$ = Waktu, $H$ = Hasil):\n$$\\frac{1 \\times 5}{150} = \\frac{O_2 \\times 4}{480}$$\n$$\\frac{1}{30} = \\frac{O_2}{120} \\rightarrow O_2 = \\frac{120}{30} = 4\\text{ orang}$$\n• Karena Bu Tuti terhitung $1$ orang, maka jumlah asisten yang dibutuhkan = $4 - 1 = 3$ orang asisten."
+            },
+            {
+                        "id": 4,
+                        "text": "Jika sebuah bak penampungan diisi air menggunakan pipa P akan penuh dalam waktu $8$ jam. Jika diisi menggunakan pipa Q akan penuh dalam waktu $4$ jam. Apabila kedua pipa dibuka bersama-sama selama $2$ jam, maka bak penampungan tersebut akan terisi ... bagian.",
+                        "options": [
+                                    "$0,50$",
+                                    "$0,60$",
+                                    "$0,75$",
+                                    "$0,80$",
+                                    "$0,90$"
+                        ],
+                        "correct": 2,
+                        "explanation": "• Laju pipa P = $\\frac{1}{8}$ bagian/jam, laju pipa Q = $\\frac{1}{4}$ bagian/jam.\n• Bagian yang terisi selama $2$ jam secara bersama-sama:\n$$\\text{Bagian terisi} = 2 \\times \\left(\\frac{1}{8} + \\frac{1}{4}\\right) = 2 \\times \\left(\\frac{1 + 2}{8}\\right) = 2 \\times \\frac{3}{8} = \\frac{6}{8} = 0,75\\text{ bagian}$$"
+            },
+            {
+                        "id": 5,
+                        "text": "Sebuah proyek pembangunan gedung direncanakan dapat diselesaikan oleh $15$ pekerja dalam waktu $32$ hari. Jika sejak awal pembangunan pekerja ditambahkan $5$ orang lagi dengan kemampuan yang sama, maka pekerjaan akan selesai dalam ... hari.",
+                        "options": [
+                                    "$20$",
+                                    "$22$",
+                                    "$24$",
+                                    "$26$",
+                                    "$28$"
+                        ],
+                        "correct": 2,
+                        "explanation": "• Jumlah pekerja baru = $15 + 5 = 20$ pekerja.\n• Gunakan perbandingan berbalik nilai antara pekerja dan waktu:\n$$15 \\times 32 = 20 \\times H$$\n$$H = \\frac{480}{20} = 24\\text{ hari}$$"
+            },
+            {
+                        "id": 6,
+                        "text": "Seorang pedagang membeli $12$ lusin buku tulis dengan harga $\\text{Rp}432.000,00$. Jika ia ingin membeli $180$ buah buku tulis dengan kualitas yang sama, maka ia harus membayar sebesar ...",
+                        "options": [
+                                    "$\\text{Rp}480.000,00$",
+                                    "$\\text{Rp}510.000,00$",
+                                    "$\\text{Rp}540.000,00$",
+                                    "$\\text{Rp}570.000,00$",
+                                    "$\\text{Rp}600.000,00$"
+                        ],
+                        "correct": 2,
+                        "explanation": "• $1$ lusin = $12$ buah, maka $12$ lusin = $12 \\times 12 = 144$ buah buku tulis.\n• Harga $1$ buah buku tulis = $\\frac{\\text{Rp}432.000,00}{144} = \\text{Rp}3.000,00$.\n• Harga untuk $180$ buah buku tulis = $180 \\times \\text{Rp}3.000,00 = \\text{Rp}540.000,00$."
+            },
+            {
+                        "id": 7,
+                        "text": "Sebuah sepeda motor memerlukan $5$ liter bahan bakar untuk menempuh jarak $175\\text{ km}$. Jika harga bahan bakar adalah $\\text{Rp}12.000,00$ per liter, maka biaya bahan bakar yang diperlukan untuk perjalanan sejauh $280\\text{ km}$ adalah ...",
+                        "options": [
+                                    "$\\text{Rp}84.000,00$",
+                                    "$\\text{Rp}96.000,00$",
+                                    "$\\text{Rp}108.000,00$",
+                                    "$\\text{Rp}120.000,00$",
+                                    "$\\text{Rp}132.000,00$"
+                        ],
+                        "correct": 1,
+                        "explanation": "• Jarak tempuh per liter = $\\frac{175\\text{ km}}{5\\text{ liter}} = 35\\text{ km/liter}$.\n• Kebutuhan bahan bakar untuk $280\\text{ km}$ = $\\frac{280}{35} = 8$ liter.\n• Total biaya = $8 \\times \\text{Rp}12.000,00 = \\text{Rp}96.000,00$."
+            },
+            {
+                        "id": 8,
+                        "text": "Sebuah mesin pompa dapat mengisi penuh tandon dengan kapasitas $2.400$ liter dalam waktu $40$ menit. Jika pengisian dilakukan dengan $4$ mesin pompa yang identik secara bersamaan, maka waktu yang diperlukan untuk mengisi tandon berkapasitas $6.000$ liter adalah ... menit.",
+                        "options": [
+                                    "$20$",
+                                    "$25$",
+                                    "$30$",
+                                    "$35$",
+                                    "$40$"
+                        ],
+                        "correct": 1,
+                        "explanation": "• Gunakan rumus perbandingan beban kerja $\\frac{M_1 \\times W_1}{H_1} = \\frac{M_2 \\times W_2}{H_2}$ ($M$ = Mesin, $W$ = Waktu, $H$ = Hasil/Kapasitas):\n$$\\frac{1 \\times 40}{2.400} = \\frac{4 \\times t}{6.000}$$\n$$\\frac{1}{60} = \\frac{t}{1.500} \\rightarrow t = \\frac{1.500}{60} = 25\\text{ menit}$$"
+            },
+            {
+                        "id": 9,
+                        "text": "Sebuah konveksi memerlukan $6$ mesin jahit untuk menyelesaikan $1.800$ potong kemeja dalam waktu $5$ hari. Jika konveksi tersebut mendapat pesanan untuk menjahit $3.600$ potong kemeja yang sama dan ingin diselesaikan dalam waktu $6$ hari, maka jumlah mesin jahit yang dibutuhkan adalah ... unit.",
+                        "options": [
+                                    "$8$",
+                                    "$10$",
+                                    "$12$",
+                                    "$14$",
+                                    "$16$"
+                        ],
+                        "correct": 1,
+                        "explanation": "• Gunakan rumus perbandingan beban kerja $\\frac{M_1 \\times W_1}{H_1} = \\frac{M_2 \\times W_2}{H_2}$:\n$$\\frac{6 \\times 5}{1.800} = \\frac{M_2 \\times 6}{3.600}$$\n$$\\frac{30}{1.800} = \\frac{M_2}{600} \\rightarrow M_2 = \\frac{30 \\times 600}{1.800} = 10\\text{ unit}$$"
+            },
+            {
+                        "id": 10,
+                        "text": "Sebuah tandon air raksasa dapat diisi penuh oleh $6$ keran dalam waktu $8$ jam. Jika tandon tersebut sudah terisi $\\frac{1}{4}$ bagian dan petugas ingin mengisi penuh sisa tandon dalam waktu $6$ jam, maka keran yang dibutuhkan adalah ... buah.",
+                        "options": [
+                                    "$5$",
+                                    "$6$",
+                                    "$7$",
+                                    "$8$",
+                                    "$9$"
+                        ],
+                        "correct": 1,
+                        "explanation": "• Sisa bagian tandon yang harus diisi = $1 - \\frac{1}{4} = \\frac{3}{4}$ bagian.\n• Gunakan perbandingan beban kerja $\\frac{K_1 \\times W_1}{H_1} = \\frac{K_2 \\times W_2}{H_2}$:\n$$\\frac{6 \\times 8}{1} = \\frac{K_2 \\times 6}{\\frac{3}{4}}$$\n$$48 = 6K_2 \\times \\frac{4}{3} \\rightarrow 48 = 8K_2 \\rightarrow K_2 = 6\\text{ buah}$$"
+            },
+            {
+                        "id": 11,
+                        "text": "Seorang peternak memiliki persediaan pakan yang cukup untuk $40$ ekor kambing selama $21$ hari. Jika peternak tersebut menjual $5$ ekor kambingnya, maka persediaan pakan tersebut akan habis dalam waktu ... hari.",
+                        "options": [
+                                    "$18$",
+                                    "$20$",
+                                    "$24$",
+                                    "$28$",
+                                    "$30$"
+                        ],
+                        "correct": 2,
+                        "explanation": "• Sisa kambing = $40 - 5 = 35$ ekor.\n• Gunakan perbandingan berbalik nilai antara jumlah kambing dan lama hari:\n$$40 \\times 21 = 35 \\times H$$\n$$H = \\frac{840}{35} = 24\\text{ hari}$$"
+            },
+            {
+                        "id": 12,
+                        "text": "Sebuah kapal feri dengan tangki bahan bakar penuh dapat menempuh jarak $320\\text{ km}$ dengan kecepatan rata-rata $40\\text{ km/jam}$. Karena kondisi gelombang tinggi, nakhoda terpaksa menurunkan kecepatan rata-rata menjadi $30\\text{ km/jam}$. Berapa jauh kapal tersebut dapat melaju dengan bahan bakar yang sama?",
+                        "options": [
+                                    "$210\\text{ km}$",
+                                    "$240\\text{ km}$",
+                                    "$260\\text{ km}$",
+                                    "$280\\text{ km}$",
+                                    "$300\\text{ km}$"
+                        ],
+                        "correct": 1,
+                        "explanation": "• Waktu tempuh kapal dengan bahan bakar penuh = $\\frac{320\\text{ km}}{40\\text{ km/jam}} = 8$ jam.\n• Dengan durasi konsumsi bahan bakar yang sama ($8$ jam) pada kecepatan $30\\text{ km/jam}$:\n$$\\text{Jarak} = 30\\text{ km/jam} \\times 8\\text{ jam} = 240\\text{ km}$$"
+            },
+            {
+                        "id": 13,
+                        "text": "Sebuah perusahaan membagikan dana bonus secara merata kepada $12$ karyawan dengan masing-masing mendapatkan $\\text{Rp}2.500.000,00$. Jika terdapat $3$ karyawan baru yang ikut menerima pembagian secara merata dari dana tersebut, berapa jumlah bonus yang diterima oleh masing-masing karyawan?",
+                        "options": [
+                                    "$\\text{Rp}1.800.000,00$",
+                                    "$\\text{Rp}2.000.000,00$",
+                                    "$\\text{Rp}2.100.000,00$",
+                                    "$\\text{Rp}2.250.000,00$",
+                                    "$\\text{Rp}3.000.000,00$"
+                        ],
+                        "correct": 1,
+                        "explanation": "• Total dana bonus perusahaan = $12 \\times \\text{Rp}2.500.000,00 = \\text{Rp}30.000.000,00$.\n• Jumlah penerima baru = $12 + 3 = 15$ karyawan.\n• Bonus per karyawan = $\\frac{\\text{Rp}30.000.000,00}{15} = \\text{Rp}2.000.000,00$."
+            },
+            {
+                        "id": 14,
+                        "text": "Bu Dina memiliki peternakan bebek. Ia memiliki persediaan pakan yang cukup untuk memberi makan $45$ ekor bebek selama $20$ hari. Jika Bu Dina menambah $15$ ekor bebek lagi ke dalam kandang, berapa hari persediaan pakan tersebut akan habis?",
+                        "options": [
+                                    "$12$ hari",
+                                    "$14$ hari",
+                                    "$15$ hari",
+                                    "$16$ hari",
+                                    "$18$ hari"
+                        ],
+                        "correct": 2,
+                        "explanation": "• Total bebek sekarang = $45 + 15 = 60$ ekor.\n• Gunakan perbandingan berbalik nilai:\n$$45 \\times 20 = 60 \\times H$$\n$$H = \\frac{900}{60} = 15\\text{ hari}$$"
+            },
+            {
+                        "id": 15,
+                        "text": "Sebuah tim pengembang aplikasi dapat menyelesaikan pembuatan sebuah sistem dalam waktu $36$ hari dengan bekerja $7$ jam per hari. Jika waktu pengerjaan dipercepat menjadi $28$ hari, berapa jam per hari tim tersebut harus bekerja agar proyek selesai tepat waktu?",
+                        "options": [
+                                    "$8$ jam",
+                                    "$9$ jam",
+                                    "$10$ jam",
+                                    "$11$ jam",
+                                    "$12$ jam"
+                        ],
+                        "correct": 1,
+                        "explanation": "• Total beban jam kerja proyek = $36\\text{ hari} \\times 7\\text{ jam/hari} = 252$ jam.\n• Gunakan perbandingan berbalik nilai:\n$$36 \\times 7 = 28 \\times J$$\n$$J = \\frac{252}{28} = 9\\text{ jam}$$"
+            },
+            {
+                        "id": 16,
+                        "text": "Sebuah pabrik tas memproduksi $180$ buah tas dalam waktu $5$ hari dengan $15$ pekerja. Jika pemilik pabrik ingin meningkatkan produksi menjadi $300$ buah tas dalam waktu yang sama, berapa banyak pekerja tambahan yang dibutuhkan?",
+                        "options": [
+                                    "$8$ pekerja",
+                                    "$10$ pekerja",
+                                    "$12$ pekerja",
+                                    "$15$ pekerja",
+                                    "$25$ pekerja"
+                        ],
+                        "correct": 1,
+                        "explanation": "• Karena waktu pengerjaan sama ($5$ hari), gunakan perbandingan senilai antara hasil produksi dan pekerja:\n$$\\frac{180\\text{ tas}}{300\\text{ tas}} = \\frac{15\\text{ pekerja}}{P_2}$$\n$$P_2 = \\frac{300 \\times 15}{180} = \\frac{4.500}{180} = 25\\text{ pekerja}$$\n• Pekerja tambahan yang dibutuhkan = $25 - 15 = 10$ pekerja."
+            },
+            {
+                        "id": 17,
+                        "text": "Seorang peternak memiliki $30$ ekor kerbau yang dapat menghabiskan rumput di padang rumput seluas $4$ hektar dalam waktu $12$ hari. Jika peternak tersebut ingin menggembalakan $45$ ekor kerbau, berapa hektar luas padang rumput yang dibutuhkan agar dapat bertahan selama $12$ hari?",
+                        "options": [
+                                    "$5$ hektar",
+                                    "$6$ hektar",
+                                    "$7$ hektar",
+                                    "$8$ hektar",
+                                    "$9$ hektar"
+                        ],
+                        "correct": 1,
+                        "explanation": "• Karena waktu merumput sama ($12$ hari), gunakan perbandingan senilai antara jumlah kerbau dan luas padang rumput:\n$$\\frac{30\\text{ ekor}}{45\\text{ ekor}} = \\frac{4\\text{ hektar}}{L_2}$$\n$$L_2 = \\frac{45 \\times 4}{30} = \\frac{180}{30} = 6\\text{ hektar}$$"
+            },
+            {
+                        "id": 18,
+                        "text": "Sebuah kereta api dapat menempuh jarak $420\\text{ km}$ dengan kecepatan rata-rata $70\\text{ km/jam}$. Jika kereta tersebut mengurangi kecepatannya menjadi $55\\text{ km/jam}$, berapa jarak yang dapat ditempuh dalam waktu yang sama?",
+                        "options": [
+                                    "$300\\text{ km}$",
+                                    "$315\\text{ km}$",
+                                    "$330\\text{ km}$",
+                                    "$345\\text{ km}$",
+                                    "$360\\text{ km}$"
+                        ],
+                        "correct": 2,
+                        "explanation": "• Waktu perjalanan kereta api = $\\frac{420\\text{ km}}{70\\text{ km/jam}} = 6$ jam.\n• Jarak yang ditempuh dalam waktu yang sama ($6$ jam) dengan kecepatan $55\\text{ km/jam}$:\n$$\\text{Jarak} = 55\\text{ km/jam} \\times 6\\text{ jam} = 330\\text{ km}$$"
+            },
+            {
+                        "id": 19,
+                        "text": "Delapan orang pekerja dapat menyelesaikan sebuah proyek dalam $15$ hari dengan bekerja $6$ jam per hari. Jika jumlah pekerja ditambah menjadi $9$ orang dan mereka bekerja $8$ jam per hari, berapa hari yang dibutuhkan untuk menyelesaikan proyek tersebut?",
+                        "options": [
+                                    "$8$ hari",
+                                    "$9$ hari",
+                                    "$10$ hari",
+                                    "$11$ hari",
+                                    "$12$ hari"
+                        ],
+                        "correct": 2,
+                        "explanation": "• Total beban kerja proyek konstan ($O_1 \\times H_1 \\times J_1 = O_2 \\times H_2 \\times J_2$):\n$$8 \\times 15 \\times 6 = 9 \\times H_2 \\times 8$$\n$$720 = 72 \\times H_2 \\rightarrow H_2 = \\frac{720}{72} = 10\\text{ hari}$$"
+            },
+            {
+                        "id": 20,
+                        "text": "Jika $6$ mesin fotokopi dapat menyelesaikan penggandaan $600$ bundel dokumen dalam waktu $4$ hari, berapa lama waktu yang dibutuhkan untuk menggandakan $450$ bundel dokumen jika menggunakan $9$ mesin fotokopi dengan kecepatan yang sama?",
+                        "options": [
+                                    "$1,5$ hari",
+                                    "$2$ hari",
+                                    "$2,5$ hari",
+                                    "$3$ hari",
+                                    "$3,5$ hari"
+                        ],
+                        "correct": 1,
+                        "explanation": "• Gunakan rumus perbandingan beban kerja $\\frac{M_1 \\times W_1}{H_1} = \\frac{M_2 \\times W_2}{H_2}$:\n$$\\frac{6 \\times 4}{600} = \\frac{9 \\times H_2}{450}$$\n$$\\frac{24}{600} = \\frac{H_2}{50} \\rightarrow \\frac{1}{25} = \\frac{H_2}{50} \\rightarrow H_2 = \\frac{50}{25} = 2\\text{ hari}$$"
+            }
+];
+
+        // STATE APLIKASI
+        let currentIndex = 0;
+        let userAnswers = new Array(questions.length).fill(null); // Menyimpan index pilihan (0, 1, 2, 3, 4)
+        let doubtStatus = new Array(questions.length).fill(false); // Menyimpan status ragu-ragu (true/false)
+        let timeLeft = 25 * 60; // 25 menit dalam detik
+        let timerInterval = null;
+        let participantName = "";
+
+        // INISIALISASI AWAL
+        document.getElementById('info-total-soal').textContent = questions.length;
+
+        function renderMath(elements) {
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                window.MathJax.typesetPromise(elements).catch((err) => console.warn('MathJax error:', err));
+            }
+        }
+
+        // Bersihkan pesan error saat pengguna mengetik ulang
+        document.getElementById('participant-name').addEventListener('input', function() {
+            document.getElementById('name-error').classList.add('hidden');
+            this.classList.remove('border-rose-500', 'ring-2', 'ring-rose-500/30');
+        });
+
+        document.getElementById('exam-password').addEventListener('input', function() {
+            document.getElementById('password-error').classList.add('hidden');
+            this.classList.remove('border-rose-500', 'ring-2', 'ring-rose-500/30');
+        });
+
+        // HANDLE LOGIN & VALIDASI PASSWORD ("pns")
+        document.getElementById('login-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const nameInputEl = document.getElementById('participant-name');
+            const passwordInputEl = document.getElementById('exam-password');
+            const nameErrorEl = document.getElementById('name-error');
+            const passwordErrorEl = document.getElementById('password-error');
+
+            const inputName = nameInputEl.value.trim();
+            const inputPassword = passwordInputEl.value;
+
+            let isValid = true;
+
+            if (!inputName) {
+                nameErrorEl.classList.remove('hidden');
+                nameInputEl.classList.add('border-rose-500', 'ring-2', 'ring-rose-500/30');
+                if (isValid) nameInputEl.focus();
+                isValid = false;
+            }
+
+            if (inputPassword !== 'pns') {
+                passwordErrorEl.classList.remove('hidden');
+                passwordInputEl.classList.add('border-rose-500', 'ring-2', 'ring-rose-500/30');
+                if (isValid) passwordInputEl.focus();
+                isValid = false;
+            }
+
+            if (!isValid) return;
+
+            participantName = inputName;
+            document.getElementById('display-name').textContent = participantName;
+
+            // Pindah tampilan dari Login ke Ujian
+            document.getElementById('login-screen').classList.add('hidden');
+            document.getElementById('exam-screen').classList.remove('hidden');
+
+            startTimer();
+            updateAnsweredCounter();
+            renderQuestionGrid();
+            loadQuestion(0);
+        });
+
+        // TIMER HITUNG MUNDUR
+        function startTimer() {
+            updateTimerDisplay();
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                updateTimerDisplay();
+
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    finishExam(true);
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            const formatted = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+            const timerEl = document.getElementById('timer-display');
+            timerEl.textContent = formatted;
+
+            // Ubah warna jadi merah jika sisa waktu di bawah 1 menit
+            if (timeLeft < 60) {
+                timerEl.classList.remove('text-sky-700', 'dark:text-sky-400');
+                timerEl.classList.add('text-rose-600', 'dark:text-rose-400');
+            }
+        }
+
+        // MUAT SOAL BERDASARKAN INDEX
+        function loadQuestion(index) {
+            currentIndex = index;
+            const q = questions[index];
+
+            // Update badge nomor soal
+            document.getElementById('current-q-badge').textContent = index + 1;
+            document.getElementById('question-text').textContent = q.text;
+
+            // Render Pilihan Ganda (A, B, C, D, E)
+            const optionsList = document.getElementById('options-list');
+            optionsList.innerHTML = '';
+            const letters = ['A', 'B', 'C', 'D', 'E'];
+
+            q.options.forEach((optText, optIndex) => {
+                const isSelected = userAnswers[index] === optIndex;
+                
+                const optionBtn = document.createElement('div');
+                optionBtn.onclick = () => selectOption(optIndex);
+                optionBtn.className = `flex items-start gap-3.5 p-3.5 rounded-xl border-2 cursor-pointer transition-all ${
+                    isSelected 
+                    ? 'border-sky-500 bg-sky-50/70 dark:bg-sky-950/60 dark:border-sky-400 shadow-xs' 
+                    : 'border-slate-200 dark:border-slate-700/80 hover:border-sky-300 dark:hover:border-sky-600 hover:bg-slate-50 dark:hover:bg-slate-800/70'
+                }`;
+
+                optionBtn.innerHTML = `
+                    <div class="option-circle w-7 h-7 rounded-full flex items-center justify-center font-bold text-sm shrink-0 mt-0.5 ${
+                        isSelected 
+                        ? 'bg-sky-500 text-white' 
+                        : 'bg-white dark:bg-slate-800 border-2 border-slate-300 dark:border-slate-600 text-slate-600 dark:text-slate-300'
+                    }">
+                        ${letters[optIndex]}
+                    </div>
+                    <div class="text-slate-700 dark:text-slate-200 ${isSelected ? 'font-semibold text-slate-900 dark:text-white' : ''}">
+                        ${optText}
+                    </div>
+                `;
+                optionsList.appendChild(optionBtn);
+            });
+
+            renderMath([document.getElementById('question-container')]);
+
+            // Update Checkbox Ragu-ragu
+            document.getElementById('doubt-checkbox').checked = doubtStatus[index];
+
+            // Update Tombol Sebelumnya & Berikutnya
+            document.getElementById('btn-prev').disabled = (index === 0);
+            
+            const btnNextText = document.getElementById('btn-next-text');
+            const btnNext = document.getElementById('btn-next');
+            if (index === questions.length - 1) {
+                btnNextText.textContent = "Selesai Ujian";
+                btnNext.classList.remove('bg-sky-500', 'hover:bg-sky-600');
+                btnNext.classList.add('bg-emerald-600', 'hover:bg-emerald-700');
+                btnNext.onclick = confirmFinish;
+            } else {
+                btnNextText.textContent = "Soal Berikutnya";
+                btnNext.classList.remove('bg-emerald-600', 'hover:bg-emerald-700');
+                btnNext.classList.add('bg-sky-500', 'hover:bg-sky-600');
+                btnNext.onclick = nextQuestion;
+            }
+
+            renderQuestionGrid();
+        }
+
+        // PILIH JAWABAN
+        function selectOption(optIndex) {
+            userAnswers[currentIndex] = optIndex;
+            loadQuestion(currentIndex);
+            updateAnsweredCounter();
+        }
+
+        // TOGGLE RAGU-RAGU
+        function toggleDoubt() {
+            doubtStatus[currentIndex] = !doubtStatus[currentIndex];
+            document.getElementById('doubt-checkbox').checked = doubtStatus[currentIndex];
+            renderQuestionGrid();
+        }
+
+        // NAVIGASI SEBELUMNYA & BERIKUTNYA
+        function prevQuestion() {
+            if (currentIndex > 0) {
+                loadQuestion(currentIndex - 1);
+            }
+        }
+
+        function nextQuestion() {
+            if (currentIndex < questions.length - 1) {
+                loadQuestion(currentIndex + 1);
+            }
+        }
+
+        // RENDER DAFTAR KOTAK NOMOR SOAL
+        function renderQuestionGrid() {
+            const grid = document.getElementById('question-grid');
+            grid.innerHTML = '';
+
+            questions.forEach((q, idx) => {
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.textContent = idx + 1;
+                btn.onclick = () => loadQuestion(idx);
+
+                // Tentukan warna kotak sesuai status:
+                // Prioritas: Ragu-ragu (Kuning) -> Sudah Dijawab (Hijau) -> Belum Dijawab (Abu/Gelap)
+                let colorClasses = "bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-300 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-700";
+                
+                if (doubtStatus[idx]) {
+                    colorClasses = "bg-amber-400 text-slate-900 border border-amber-500 font-bold";
+                } else if (userAnswers[idx] !== null) {
+                    colorClasses = "bg-emerald-500 dark:bg-emerald-600 text-white border border-emerald-600 dark:border-emerald-500 font-bold";
+                }
+
+                // Indikator soal yang sedang aktif dibuka
+                let activeRing = (idx === currentIndex) ? "ring-2 ring-offset-2 ring-sky-500 dark:ring-offset-slate-900 scale-105" : "";
+
+                btn.className = `h-10 rounded-lg text-sm font-semibold transition-all flex items-center justify-center cursor-pointer ${colorClasses} ${activeRing}`;
+                grid.appendChild(btn);
+            });
+        }
+
+        // UPDATE COUNTER SOAL TERJAWAB
+        function updateAnsweredCounter() {
+            const answeredCount = userAnswers.filter(ans => ans !== null).length;
+            document.getElementById('answered-counter').textContent = `${answeredCount} / ${questions.length} Dijawab`;
+        }
+
+        // UBAH UKURAN FONT SOAL
+        function changeFontSize(sizeClass) {
+            const container = document.getElementById('question-container');
+            container.classList.remove('text-sm', 'text-base', 'text-lg');
+            container.classList.add(sizeClass);
+        }
+
+        // KONFIRMASI SELESAI UJIAN
+        function confirmFinish() {
+            const unansweredCount = userAnswers.filter(ans => ans === null).length;
+            const doubtCount = doubtStatus.filter(d => d === true).length;
+            const msgEl = document.getElementById('confirm-message');
+
+            if (unansweredCount > 0 || doubtCount > 0) {
+                msgEl.innerHTML = `Masih terdapat <strong class="text-rose-600 dark:text-rose-400">${unansweredCount} soal belum dijawab</strong> dan <strong class="text-amber-600 dark:text-amber-400">${doubtCount} soal ragu-ragu</strong>.<br><br>Apakah Anda yakin tetap ingin menyelesaikan ujian sekarang?`;
+            } else {
+                msgEl.textContent = "Semua soal telah dijawab. Apakah Anda yakin ingin mengakhiri ujian dan melihat hasil?";
+            }
+
+            document.getElementById('confirm-modal').classList.remove('hidden');
+        }
+
+        function closeConfirmModal() {
+            document.getElementById('confirm-modal').classList.add('hidden');
+        }
+
+        // SELESAI UJIAN & HITUNG SKOR + TAMPILKAN PEMBAHASAN
+        function finishExam(isTimeUp = false) {
+            clearInterval(timerInterval);
+            closeConfirmModal();
+
+            let correct = 0;
+            let wrong = 0;
+            let empty = 0;
+
+            questions.forEach((q, idx) => {
+                if (userAnswers[idx] === null) {
+                    empty++;
+                } else if (userAnswers[idx] === q.correct) {
+                    correct++;
+                } else {
+                    wrong++;
+                }
+            });
+
+            const score = Math.round((correct / questions.length) * 100);
+
+            // Tampilkan Halaman Hasil
+            document.getElementById('exam-screen').classList.add('hidden');
+            document.getElementById('result-screen').classList.remove('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            if (isTimeUp) {
+                document.getElementById('time-up-banner').classList.remove('hidden');
+            }
+
+            document.getElementById('result-name').textContent = participantName;
+            document.getElementById('result-score').textContent = score;
+            document.getElementById('result-correct').textContent = correct;
+            document.getElementById('result-wrong').textContent = wrong;
+            document.getElementById('result-empty').textContent = empty;
+
+            renderReviewList('all');
+        }
+
+        // FILTER PEMBAHASAN
+        function filterReview(mode) {
+            const btnAll = document.getElementById('filter-all');
+            const btnWrong = document.getElementById('filter-wrong');
+
+            if (mode === 'all') {
+                btnAll.className = "px-3 py-1.5 rounded-lg bg-white text-sky-700 font-bold cursor-pointer transition shadow-xs";
+                btnWrong.className = "px-3 py-1.5 rounded-lg bg-sky-600/80 hover:bg-sky-700 dark:bg-slate-700 dark:hover:bg-slate-600 text-white font-semibold cursor-pointer transition";
+            } else {
+                btnWrong.className = "px-3 py-1.5 rounded-lg bg-rose-500 text-white font-bold cursor-pointer transition shadow-xs";
+                btnAll.className = "px-3 py-1.5 rounded-lg bg-sky-600/80 hover:bg-sky-700 dark:bg-slate-700 dark:hover:bg-slate-600 text-white font-semibold cursor-pointer transition";
+            }
+
+            renderReviewList(mode);
+        }
+
+        // RENDER PEMBAHASAN SOAL
+        function renderReviewList(filterMode = 'all') {
+            const reviewList = document.getElementById('review-list');
+            reviewList.innerHTML = '';
+            const letters = ['A', 'B', 'C', 'D', 'E'];
+            let count = 0;
+
+            questions.forEach((q, idx) => {
+                const userAns = userAnswers[idx];
+                const isCorrect = userAns === q.correct;
+                const isEmpty = userAns === null;
+
+                if (filterMode === 'wrong' && isCorrect) return;
+                count++;
+
+                let statusBadge = '';
+                if (isEmpty) {
+                    statusBadge = `<span class="text-xs font-bold px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700">Kosong</span>`;
+                } else if (isCorrect) {
+                    statusBadge = `<span class="text-xs font-bold px-2.5 py-1 rounded-full bg-emerald-50 dark:bg-emerald-950/70 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">Benar</span>`;
+                } else {
+                    statusBadge = `<span class="text-xs font-bold px-2.5 py-1 rounded-full bg-rose-50 dark:bg-rose-950/70 text-rose-700 dark:text-rose-300 border border-rose-200 dark:border-rose-800">Salah</span>`;
+                }
+
+                let optionsHtml = '';
+                q.options.forEach((optText, optIdx) => {
+                    const isThisCorrect = optIdx === q.correct;
+                    const isThisUser = optIdx === userAns;
+
+                    let optClass = "border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300";
+                    let badgeText = "";
+
+                    if (isThisCorrect) {
+                        optClass = "border-emerald-500 bg-emerald-50/70 dark:bg-emerald-950/40 text-emerald-900 dark:text-emerald-200 font-semibold";
+                        badgeText = `<span class="ml-auto text-[11px] font-bold text-emerald-700 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-900/70 px-2 py-0.5 rounded">Kunci Jawaban</span>`;
+                    } else if (isThisUser && !isThisCorrect) {
+                        optClass = "border-rose-500 bg-rose-50/70 dark:bg-rose-950/40 text-rose-900 dark:text-rose-200 font-semibold";
+                        badgeText = `<span class="ml-auto text-[11px] font-bold text-rose-700 dark:text-rose-400 bg-rose-100 dark:bg-rose-900/70 px-2 py-0.5 rounded">Jawaban Anda</span>`;
+                    }
+
+                    optionsHtml += `
+                        <div class="flex flex-wrap items-center gap-2.5 px-3.5 py-2.5 rounded-xl border ${optClass} text-sm">
+                            <span class="w-6 h-6 rounded-full flex items-center justify-center font-bold text-xs shrink-0 ${
+                                isThisCorrect ? 'bg-emerald-500 text-white' : (isThisUser ? 'bg-rose-500 text-white' : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300')
+                            }">${letters[optIdx]}</span>
+                            <span>${optText}</span>
+                            ${badgeText}
+                        </div>
+                    `;
+                });
+
+                const item = document.createElement('div');
+                item.className = "pt-6 first:pt-0";
+                item.innerHTML = `
+                    <div class="flex items-center justify-between gap-2 mb-3">
+                        <span class="bg-sky-500 text-white font-bold text-xs px-3 py-1 rounded-md">Soal Nomor ${q.id}</span>
+                        ${statusBadge}
+                    </div>
+                    <p class="text-slate-800 dark:text-slate-100 font-medium text-sm md:text-base mb-3.5 leading-relaxed">${q.text}</p>
+                    <div class="space-y-2 mb-4">
+                        ${optionsHtml}
+                    </div>
+                    <div class="bg-sky-50 dark:bg-slate-800/80 border border-sky-100 dark:border-slate-700 rounded-xl p-4 text-sm">
+                        <p class="font-bold text-sky-700 dark:text-sky-400 text-xs uppercase tracking-wider mb-1.5">Pembahasan (Kunci: ${letters[q.correct]}):</p>
+                        <div class="text-slate-700 dark:text-slate-200 whitespace-pre-line leading-relaxed">${q.explanation}</div>
+                    </div>
+                `;
+                reviewList.appendChild(item);
+            });
+
+            if (count === 0) {
+                reviewList.innerHTML = `
+                    <div class="text-center py-8 text-slate-500 dark:text-slate-400 text-sm">
+                        Tidak ada soal yang salah atau kosong. Semua jawaban Anda benar!
+                    </div>
+                `;
+            }
+
+            renderMath([reviewList]);
+        }
+    </script>
+</body>
+</html>
